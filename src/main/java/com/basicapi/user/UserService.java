@@ -43,8 +43,30 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public UserDto findUserById(String id) {
-        return userRepository.findUserById(id);
+    public UserDto findUserBySeq(Long seq) {
+        return userRepository.findUserBySeq(seq);
     }
+    @Transactional
+    public UserDto changeUser(Long seq, UserDto userDto) {
 
+        LocalDateTime date = LocalDateTime.now();
+
+        User user = userRepository.findById(seq).orElseThrow(()->new IllegalArgumentException("등록된 사용자가 아닙니다."));
+        User savedUser = user.changeUser(seq, userDto);
+
+        userDto = UserDto.builder()
+                .name(savedUser.getName())
+                .email(savedUser.getEmail())
+                .phone(savedUser.getPhone())
+                .modifiedDate(date)
+                .build();
+
+        return userDto;
+    }
+    @Transactional
+    public Long deleteUser(Long seq) {
+        User user = userRepository.findById(seq).orElseThrow(()->new IllegalArgumentException("등록된 사용자가 아닙니다."));
+        userRepository.delete(user);
+        return seq;
+    }
 }

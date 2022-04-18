@@ -2,14 +2,12 @@ package com.basicapi.user;
 
 import com.basicapi.common.response.SingleResult;
 import com.basicapi.common.service.ResponseService;
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "002.User")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -30,10 +28,17 @@ public class UserController {
         return page.map(UserDto::new);
     }
 
-    @GetMapping("/findUserById/{id}")
-    public SingleResult<UserDto> findUserById(@PathVariable String id){
-        return responseService.getSingleResult(userService.findUserById(id));
+    @GetMapping("/findUserBySeq/{seq}")
+    public SingleResult<UserDto> findUserBySeq(@PathVariable Long seq){
+        return responseService.getSingleResult(userService.findUserBySeq(seq));
     }
 
-
+    @PutMapping("/userChange/{seq}")
+    public SingleResult<UserDto> changeUser(@PathVariable Long seq, @RequestBody UserDto userDto){
+        return responseService.getSingleResult(userService.changeUser(seq, userDto));
+    }
+    @DeleteMapping("/userDelete/{seq}")
+    public Long deleteUser(@PathVariable Long seq){
+        return userService.deleteUser(seq);
+    }
 }

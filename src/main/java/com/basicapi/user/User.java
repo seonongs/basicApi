@@ -38,4 +38,17 @@ public class User {
     @LastModifiedDate
     private LocalDateTime modifiedDate = LocalDateTime.now();
 
+    public User changeUser(Long seq, UserDto userDto) {
+
+        LocalDateTime date = LocalDateTime.now();
+
+        this.seq = seq;
+        this.name = userDto.getName();
+        this.email = userDto.getEmail();
+        this.phone = userDto.getPhone();
+        this.modifiedDate = date;
+
+        return this;
+
+    }
 }
