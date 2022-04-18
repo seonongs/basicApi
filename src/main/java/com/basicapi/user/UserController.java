@@ -1,27 +1,41 @@
 package com.basicapi.user;
 
+import com.basicapi.common.response.SingleResult;
+import com.basicapi.common.service.ResponseService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@Api(tags = "002.User")
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
+
 public class UserController {
 
     private final UserService userService;
+    private final ResponseService responseService;
 
-    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    @PostMapping("/saveUser")
+    public SingleResult<UserDto> saveUser(@RequestBody UserDto userDto){
+        return responseService.getSingleResult(userService.save(userDto));
     }
+
+    @GetMapping("/findAllUsers")
+    public Page<UserDto> findAllUsers(Pageable pageable) {
+        Page<User> page = userService.findAllUsers(pageable);
+        return page.map(UserDto::new);
+    }
+
+    @GetMapping("/findUserById/{id}")
+    public SingleResult<UserDto> findUserById(@PathVariable String id){
+
+        return responseService.getSingleResult(userService.findUserById(id));
+
+    }
+
+
 }

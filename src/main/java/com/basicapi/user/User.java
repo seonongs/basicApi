@@ -1,14 +1,16 @@
 package com.basicapi.user;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User {
     @Id
@@ -30,13 +32,10 @@ public class User {
     @Column(length = 12, nullable = false)
     private String phone;
 
-    @Builder
-    public User(Long seq, String id, String pw, String name, String email, String phone) {
-        this.seq = seq;
-        this.id = id;
-        this.pw = pw;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-    }
+    @CreatedDate
+    private LocalDateTime createdDate = LocalDateTime.now();
+
+    @LastModifiedDate
+    private LocalDateTime modifiedDate = LocalDateTime.now();
+
 }
