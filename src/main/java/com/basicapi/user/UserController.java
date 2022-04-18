@@ -32,9 +32,7 @@ public class UserController {
 
     @GetMapping("/findUserById/{id}")
     public SingleResult<UserDto> findUserById(@PathVariable String id){
-
         return responseService.getSingleResult(userService.findUserById(id));
-
     }
 
 
